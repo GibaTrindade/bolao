@@ -1,0 +1,28 @@
+{% extends 'base.html' %} <!-- Supondo que você tenha um template base com Bootstrap 5 -->
+
+{% block content %}
+{% include 'parciais/_messages.html' %}
+<div class="container mt-3">
+    <h2>Lista de Apostas</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Partida</th>
+                <th>Aposta</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aposta in apostas %}
+            <tr>
+                <td>{{ aposta.user.username }}</td>
+                <td>{{ aposta.partida.time1.nome }} vs {{ aposta.partida.time2.nome }}</td>
+                <td>{{ aposta.previsao_goals1 }} - {{ aposta.previsao_goals2 }}</td>
+                <td>{{ aposta.partida.gols1 }} - {{ aposta.partida.gols2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

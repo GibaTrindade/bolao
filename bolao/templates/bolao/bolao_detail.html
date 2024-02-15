@@ -1,0 +1,105 @@
+{% extends 'base.html' %} <!-- Substitua por seu base template se tiver um diferente -->
+
+{% block content %}
+{% include 'parciais/_messages.html' %}
+<div class="container mt-3">
+    <h1 class="text-center mb-5">Capeonato: {{ bolao.campeonato.nome }}</h1>
+  <div class="row">
+    <div class="col-md-2">
+      <!-- Detalhes do Bolão -->
+      <div class="card">
+        <img src="data:image/jpeg;base64,{{ bolao.imagem_base64 }}" class="card-img-top" alt="Imagem do Bolão">
+        <div class="card-body">
+          <h5 class="card-title">{{ bolao.nome }}</h5>
+          <p class="card-text">{{ quantidade_users }} PARTICIPANTES</p>
+          <p class="card-text">{{ bolao.descricao }}</p>
+          <a href="#" class="btn btn-primary">Ver descrição</a>
+        </div>
+      </div>
+      <!-- Classificação -->
+      <!-- ... Código para a classificação ... -->
+    </div>
+    <div class="col-md-2">
+      <!-- Participantes -->
+      <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Ranking</h5>
+            {% for ranking in rankings %}
+                <p>{{ ranking.user.username }} -- {{ranking.pontuacao}}</p>
+            {% endfor %}
+          <!-- Botões de compartilhamento -->
+          <!-- ... Código para os botões de compartilhamento ... -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <!-- Próximas partidas -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Partidas da Semana</h5>
+            {% if partidas %}
+                <div class="list-group">
+                {% for partida in partidas %}
+                    <a href="" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
+                        {% if partida.status.nome == 'INICIADA' %}  
+                            bg-warning
+                        {% elif partida.status.nome == 'FINALIZADA' %}
+                            bg-danger
+                        {% endif %}">
+                    <div class="flex-column">
+                        <h5 class="mb-1">{{ partida.time1.nome }} vs {{ partida.time2.nome }}</h5>
+                        <span class="badge bg-secondary rounded-pill">Data da Partida: {{ partida.data_partida|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="flex-column text-end">
+                        Resultado: <span class="badge bg-primary rounded-pill">{{ partida.gols1 }} - {{ partida.gols2 }}</span><br>
+                        Meu palpite: <span class="badge bg-primary rounded-pill">{{partida.previsao_goals1_subquery}} - {{partida.previsao_goals2_subquery}}</span>
+                    </div>
+                    </a>
+                {% endfor %}
+                </div>
+            {% else %}
+                <p>Nenhuma partida encontrada.</p>
+            {% endif %}
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'make_bet' bolao.id %}" class="btn btn-primary mt-3">Dar palpites</a>
+                <a href="" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Ver palpites</a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Outras seções da página -->
+  <!-- ... -->
+  <div class="row">
+    
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="true" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Lista de Palpites</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% for data, partidas in partidas_por_data.items %}
+                <h2>{{ data|date:"d/m/Y" }}</h2>
+                {% for partida in partidas %}
+                    <div>
+                        <h3>{{ partida.time1.nome }} vs {{ partida.time2.nome }}</h3>
+                        {% for aposta in partida.aposta_set.all %}
+                            <p>{{ aposta.user.nome }}: {{ aposta.previsao_goals1 }} - {{ aposta.previsao_goals2 }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

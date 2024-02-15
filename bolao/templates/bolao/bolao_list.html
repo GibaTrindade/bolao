@@ -1,0 +1,13 @@
+{% extends 'base.html' %} <!-- Supondo que você tenha um template base com Bootstrap 5 -->
+
+{% block content %}
+{% include 'parciais/_messages.html' %}
+
+<h1>Listagem de Bolões</h1>
+<ul>
+    {% for bolao in boloes %}
+    <li><a href="{% url 'bolao_detail' bolao.id %}">{{ bolao.nome }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
