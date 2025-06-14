@@ -14,7 +14,7 @@ def atualizar_pontuacao(sender, instance, **kwargs):
             # Atualizar ou criar pontuação no Ranking
             ranking, created = Ranking.objects.get_or_create(user=aposta.user, campeonato=instance.campeonato)
             if not created:
-                ranking.pontuacao += pontuacao
+                ranking.pontuacao = (ranking.pontuacao or 0) + pontuacao
             else:
                 ranking.pontuacao = pontuacao
             ranking.save()
