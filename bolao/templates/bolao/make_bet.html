@@ -5,31 +5,38 @@
     {% include 'parciais/_messages.html' %}
 
     <h1 class="mb-4">Faça sua Aposta para o Bolão: {{ bolao.nome }}</h1>
-    <form method="post" class="text-center">
+
+    {% for partida in partidas %}
+    <form method="post" class="mb-3">
         {% csrf_token %}
-        {% for partida in partidas %}
-        
-        <div class="row mb-2 g-2 justify-content-center align-items-center">
+        <input type="hidden" name="partida_id" value="{{ partida.id }}">
+        <div class="row g-2 justify-content-center align-items-center">
             <div class="col-2">
                 <label class="form-label">{{ partida.time1.nome }}</label>
             </div>
             <div class="col-1">
-                <input type="number" class="form-control text-center" value="{{ partida.previsao_goals1_subquery|default_if_none:'' }}" name="goals1_{{ partida.id }}" id="goals1_{{ partida.id }}" min="0" required>
+                <input type="number" class="form-control text-center"
+                    name="goals1" id="goals1_{{ partida.id }}"
+                    value="{{ partida.previsao_goals1_subquery|default_if_none:'' }}"
+                    min="0" required>
             </div>
             <div class="col-auto">
                 <div class="px-2">x</div>
             </div>
             <div class="col-1">
-                <input type="number" class="form-control text-center" value="{{ partida.previsao_goals2_subquery|default_if_none:'' }}" name="goals2_{{ partida.id }}" id="goals2_{{ partida.id }}" min="0" required>
+                <input type="number" class="form-control text-center"
+                    name="goals2" id="goals2_{{ partida.id }}"
+                    value="{{ partida.previsao_goals2_subquery|default_if_none:'' }}"
+                    min="0" required>
             </div>
             <div class="col-2">
                 <label class="form-label">{{ partida.time2.nome }}</label>
             </div>
-        </div>
-        {% endfor %}
-        <div>
-            <button type="submit" class="btn btn-primary">Salvar Aposta</button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success">Apostar</button>
+            </div>
         </div>
     </form>
+    {% endfor %}
 </div>
 {% endblock %}

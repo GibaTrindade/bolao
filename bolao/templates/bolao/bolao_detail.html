@@ -5,7 +5,7 @@
 <div class="container mt-3">
     <h1 class="text-center mb-5">Capeonato: {{ bolao.campeonato.nome }}</h1>
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
       <!-- Detalhes do Bolão -->
       <div class="card">
         <img src="data:image/jpeg;base64,{{ bolao.imagem_base64 }}" class="card-img-top" alt="Imagem do Bolão">
@@ -19,20 +19,29 @@
       <!-- Classificação -->
       <!-- ... Código para a classificação ... -->
     </div>
-    <div class="col-md-2">
-      <!-- Participantes -->
-      <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Ranking</h5>
-            {% for ranking in rankings %}
-                <p>{{ ranking.user.username }} -- {{ranking.pontuacao}}</p>
-            {% endfor %}
-          <!-- Botões de compartilhamento -->
-          <!-- ... Código para os botões de compartilhamento ... -->
-        </div>
-      </div>
+    <div class="col-md-3">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title text-center fw-bold mb-3">🏆 Ranking</h5>
+      <ol class="list-group list-group-numbered">
+        {% for ranking in rankings %}
+          <li class="list-group-item d-flex justify-content-between align-items-center {% if forloop.counter == 1 %}bg-warning-subtle fw-bold{% elif forloop.counter == 2 %}bg-secondary-subtle fw-bold{% elif forloop.counter == 3 %}bg-info-subtle fw-bold{% endif %}">
+            <span>
+              {{ ranking.user.username }}
+            </span>
+            <span class="badge bg-primary rounded-pill">
+              {{ ranking.pontuacao }}
+            </span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">Sem participantes ainda.</li>
+        {% endfor %}
+      </ol>
     </div>
-    <div class="col-md-8">
+  </div>
+</div>
+
+    <div class="col-md-6">
       <!-- Próximas partidas -->
       <div class="card">
         <div class="card-body">
@@ -51,8 +60,8 @@
                         <span class="badge bg-secondary rounded-pill">Data da Partida: {{ partida.data_partida|date:"d/m/Y" }}</span>
                     </div>
                     <div class="flex-column text-end">
-                        Resultado: <span class="badge bg-primary rounded-pill">{{ partida.gols1 }} - {{ partida.gols2 }}</span><br>
-                        Meu palpite: <span class="badge bg-primary rounded-pill">{{partida.previsao_goals1_subquery}} - {{partida.previsao_goals2_subquery}}</span>
+                        Resultado: <span class="badge bg-primary rounded-pill">{{ partida.resultado_formatado }}</span><br>
+                        Meu palpite: <span class="badge bg-primary rounded-pill">{{partida.previsao_formatada}}</span>
                     </div>
                     </a>
                 {% endfor %}

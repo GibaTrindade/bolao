@@ -19,7 +19,7 @@ class User(AbstractUser):
 
 
     def __str__(self):
-        return self.nome
+        return self.username
     
     def save(self, *args, **kwargs):
         self.nome = self.nome.upper()
@@ -105,6 +105,11 @@ class Partida(models.Model):
     campeonato = models.ForeignKey(Campeonato,on_delete=models.CASCADE, blank=False, null=False)
     data_partida = models.DateField()
 
+    def resultado_formatado(self):
+        if self.gols1 is None or self.gols2 is None:
+            return "- -"
+        return f"{self.gols1} - {self.gols2}"
+
     def __str__(self):
         return f'{self.time1.nome} x {self.time2.nome}'
 
@@ -114,6 +119,11 @@ class Aposta(models.Model):
     partida = models.ForeignKey(Partida, on_delete=models.CASCADE)
     previsao_goals1 = models.PositiveSmallIntegerField()
     previsao_goals2 = models.PositiveSmallIntegerField()
+
+    def previsao_formatada(self):
+        if self.previsao_goals1 is None or self.previsao_goals2 is None:
+            return "- -"
+        return f"{self.previsao_goals1} - {self.previsao_goals2}"
 
     def __str__(self):
         return f'{self.user.nome}: {self.partida.time1.nome} [{self.previsao_goals1}] x {self.partida.time2.nome} [{self.previsao_goals2}]'
